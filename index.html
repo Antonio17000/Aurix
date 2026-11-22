@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="it">
 <head>
@@ -10,97 +11,743 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-192.png">
   <title>AURIX — Personal AI</title>
+
   <style>
-    :root{color-scheme:dark;--bg:#080f20;--panel:#111d33;--line:#263653;--blue:#78b8ff;--muted:#9aacc7}
-    *{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#142746,var(--bg) 55%);color:#f4f7ff;font:16px -apple-system,BlinkMacSystemFont,sans-serif;min-height:100vh}
-    .app{max-width:760px;margin:auto;padding:env(safe-area-inset-top) 16px calc(20px + env(safe-area-inset-bottom))}
-    header{display:flex;align-items:center;gap:12px;padding:22px 4px 16px}.logo{width:46px;height:46px;border:1px solid #35527a;border-radius:15px;display:grid;place-items:center;color:var(--blue);font-size:25px;background:#10213b}
-    h1{font-size:21px;letter-spacing:3px;margin:0} header small{color:var(--muted);letter-spacing:2px}
-    .status{margin-left:auto;font-size:11px;color:#8bd7b0;border:1px solid #285844;padding:6px 9px;border-radius:30px}
-    .intro,.tools,.chatbox{background:#0e1a2d;border:1px solid var(--line);border-radius:20px;padding:16px;margin:10px 0}
-    .intro h2{font-size:19px;margin:0 0 7px}.intro p{color:var(--muted);line-height:1.5;margin:0}
-    #messages{display:flex;flex-direction:column;gap:10px;min-height:220px;max-height:48vh;overflow:auto;padding:4px}
-    .msg{max-width:88%;padding:12px 14px;border-radius:16px;line-height:1.45;white-space:pre-wrap}
-    .bot{align-self:flex-start;background:#172944;border:1px solid #2b4161}.user{align-self:flex-end;background:#24548a}
-    .composer{display:flex;gap:8px;margin-top:12px}.composer input{min-width:0;flex:1;background:#091426;border:1px solid #304563;border-radius:14px;padding:14px;color:white;font-size:16px}
-    button{border:0;border-radius:13px;padding:12px 14px;background:#2b65a2;color:white;font-weight:600;font-size:15px}button.secondary{background:#1b2b43;border:1px solid #344b6b}
-    .tools{display:flex;flex-wrap:wrap;gap:8px}.hint{color:var(--muted);font-size:12px;line-height:1.5;margin:12px 4px}
-    .memory{display:flex;gap:8px;align-items:center}.memory input{flex:1;min-width:0;background:#091426;border:1px solid #304563;border-radius:12px;padding:11px;color:white}
-    .saved{font-size:13px;color:#a9c7e9;min-height:18px}
-    @media(min-width:600px){.app{padding-top:24px}}
+    :root {
+      color-scheme: dark;
+      --bg: #080f20;
+      --panel: #111d33;
+      --line: #263653;
+      --blue: #78b8ff;
+      --muted: #9aacc7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #142746, var(--bg) 55%);
+      color: #f4f7ff;
+      font: 16px -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 760px;
+      margin: auto;
+      padding: env(safe-area-inset-top) 16px calc(20px + env(safe-area-inset-bottom));
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 22px 4px 16px;
+    }
+
+    .logo {
+      width: 46px;
+      height: 46px;
+      border: 1px solid #35527a;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      font-size: 25px;
+      background: #10213b;
+    }
+
+    h1 {
+      font-size: 21px;
+      letter-spacing: 3px;
+      margin: 0;
+    }
+
+    header small {
+      color: var(--muted);
+      letter-spacing: 2px;
+    }
+
+    .status {
+      margin-left: auto;
+      font-size: 10px;
+      color: #f2c879;
+      border: 1px solid #70572b;
+      padding: 6px 9px;
+      border-radius: 30px;
+    }
+
+    .status.ready {
+      color: #8bd7b0;
+      border-color: #285844;
+    }
+
+    .intro, .tools, .chatbox {
+      background: #0e1a2d;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+      margin: 10px 0;
+    }
+
+    .intro h2 {
+      font-size: 19px;
+      margin: 0 0 7px;
+    }
+
+    .intro p {
+      color: var(--muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    #messages {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 220px;
+      max-height: 48vh;
+      overflow: auto;
+      padding: 4px;
+    }
+
+    .msg {
+      max-width: 88%;
+      padding: 12px 14px;
+      border-radius: 16px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .bot {
+      align-self: flex-start;
+      background: #172944;
+      border: 1px solid #2b4161;
+    }
+
+    .user {
+      align-self: flex-end;
+      background: #24548a;
+    }
+
+    .composer {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .composer input {
+      min-width: 0;
+      flex: 1;
+      background: #091426;
+      border: 1px solid #304563;
+      border-radius: 14px;
+      padding: 14px;
+      color: white;
+      font-size: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 13px;
+      padding: 12px 14px;
+      background: #2b65a2;
+      color: white;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    button.secondary {
+      background: #1b2b43;
+      border: 1px solid #344b6b;
+    }
+
+    button:disabled {
+      opacity: .5;
+    }
+
+    .tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 12px 4px;
+    }
+
+    .memory {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .memory input {
+      flex: 1;
+      min-width: 0;
+      background: #091426;
+      border: 1px solid #304563;
+      border-radius: 12px;
+      padding: 11px;
+      color: white;
+    }
+
+    .saved {
+      font-size: 13px;
+      color: #a9c7e9;
+      min-height: 18px;
+    }
+
+    #modelStatus {
+      width: 100%;
+      color: #a9c7e9;
+      font-size: 13px;
+      line-height: 1.5;
+      margin: 8px 2px 0;
+    }
+
+    @media (min-width: 600px) {
+      .app {
+        padding-top: 24px;
+      }
+    }
   </style>
 </head>
+
 <body>
 <main class="app">
-  <header><div class="logo">✦</div><div><h1>AURIX</h1><small>PERSONAL AI</small></div><span class="status">PROTOTIPO</span></header>
-  <section class="intro"><h2>Intelligence without boundaries.</h2><p>La tua interfaccia personale. Questa è la prima versione dimostrativa: chat locale, voce del browser e una piccola memoria salvata su questo dispositivo.</p></section>
-  <section class="chatbox" aria-label="Chat AURIX">
-    <div id="messages" aria-live="polite"><div class="msg bot">Ciao! Sono AURIX. Sono la prima versione del prototipo. Scrivimi qualcosa per iniziare.</div></div>
-    <form class="composer" id="chatForm"><input id="prompt" autocomplete="off" placeholder="Scrivi ad AURIX…" aria-label="Messaggio"><button type="submit">Invia</button></form>
+
+  <header>
+    <div class="logo">✦</div>
+    <div>
+      <h1>AURIX</h1>
+      <small>PERSONAL AI</small>
+    </div>
+    <span class="status" id="statusBadge">PROTOTIPO</span>
+  </header>
+
+  <section class="intro">
+    <h2>Intelligence without boundaries.</h2>
+    <p>
+      La tua intelligenza artificiale personale.
+      Un modello AI sperimentale eseguito direttamente sul dispositivo.
+    </p>
   </section>
+
+  <section class="chatbox" aria-label="Chat AURIX">
+
+    <div id="messages" aria-live="polite">
+      <div class="msg bot">
+        Ciao! Sono AURIX. Carica il mio modello AI per iniziare a conversare.
+      </div>
+    </div>
+
+    <form class="composer" id="chatForm">
+      <input
+        id="prompt"
+        autocomplete="off"
+        placeholder="Scrivi ad AURIX…"
+        aria-label="Messaggio"
+      >
+      <button id="sendBtn" type="submit">Invia</button>
+    </form>
+
+  </section>
+
   <section class="tools">
+    <button id="loadModelBtn">🧠 Carica AI sul telefono</button>
     <button class="secondary" id="speakBtn">🎙️ Parla</button>
     <button class="secondary" id="readBtn">🔊 Leggi risposta</button>
     <button class="secondary" id="searchBtn">🌐 Cerca sul web</button>
     <button class="secondary" id="clearBtn">Svuota chat</button>
+    <div id="modelStatus">
+      Il modello AI non è ancora caricato.
+    </div>
   </section>
+
   <section class="tools" style="display:block">
     <strong>Memoria locale</strong>
-    <p class="hint" style="margin:6px 0 10px">Salva una nota solo su questo browser. Non inserire password o informazioni riservate.</p>
-    <form class="memory" id="memoryForm"><input id="memoryInput" placeholder="Una nota da ricordare…"><button type="submit">Salva</button></form>
+
+    <p class="hint" style="margin:6px 0 10px">
+      Salva una nota solo su questo browser.
+      Non inserire password o informazioni riservate.
+    </p>
+
+    <form class="memory" id="memoryForm">
+      <input id="memoryInput" placeholder="Una nota da ricordare…">
+      <button type="submit">Salva</button>
+    </form>
+
     <div class="saved" id="savedNote"></div>
   </section>
-  <p class="hint">Nota: non è ancora collegata a un modello di intelligenza artificiale. Le risposte sono dimostrative. La ricerca apre il motore di ricerca in una nuova scheda. Per una vera AI servirà in seguito un servizio online sicuro: mai inserire chiavi segrete direttamente in questa pagina.</p>
+
+  <p class="hint">
+    Il primo caricamento richiede internet e spazio disponibile.
+    Le risposte vengono generate localmente tramite WASM.
+    Il modello è sperimentale e può essere lento su alcuni telefoni.
+  </p>
+
 </main>
-<script>
-const messages = document.querySelector('#messages');
-const promptInput = document.querySelector('#prompt');
-let lastReply = 'Ciao! Sono AURIX. Sono la prima versione del prototipo.';
-function addMessage(text, who){
-  const el=document.createElement('div'); el.className='msg '+who; el.textContent=text;
-  messages.appendChild(el); messages.scrollTop=messages.scrollHeight;
-  if(who==='bot') lastReply=text;
+
+<script type="module">
+
+import { pipeline } from
+  "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4";
+
+const MODEL_ID =
+  "onnx-community/Qwen2.5-0.5B-Instruct";
+
+const messages =
+  document.querySelector("#messages");
+
+const promptInput =
+  document.querySelector("#prompt");
+
+const sendBtn =
+  document.querySelector("#sendBtn");
+
+const loadModelBtn =
+  document.querySelector("#loadModelBtn");
+
+const modelStatus =
+  document.querySelector("#modelStatus");
+
+const statusBadge =
+  document.querySelector("#statusBadge");
+
+let generator = null;
+let loadingModel = false;
+let busy = false;
+
+let lastReply = "Ciao! Sono AURIX.";
+
+let chatHistory = [];
+
+const SYSTEM_PROMPT = {
+  role: "system",
+  content:
+    "Sei AURIX, un assistente personale. " +
+    "Parla in italiano, salvo richiesta diversa. " +
+    "Rispondi in modo naturale, chiaro e utile. " +
+    "Non inventare informazioni quando non le conosci."
+};
+
+function addMessage(text, who) {
+  const element = document.createElement("div");
+
+  element.className = "msg " + who;
+  element.textContent = text;
+
+  messages.appendChild(element);
+  messages.scrollTop = messages.scrollHeight;
+
+  if (who === "bot") {
+    lastReply = text;
+  }
 }
-function replyTo(text){
-  const t=text.toLowerCase();
-  if(t.includes('ciao')) return 'Ciao! Sono AURIX. Per ora sono in modalità prototipo: possiamo già provare l’interfaccia.';
-  if(t.includes('memoria')) return 'La memoria di questa demo salva una nota nel browser di questo dispositivo.';
-  if(t.includes('voce')) return 'Puoi usare il pulsante Parla per dettare un messaggio, se Safari supporta il riconoscimento vocale.';
-  return 'Ho ricevuto il tuo messaggio. Questa è una risposta dimostrativa: il collegamento a una vera AI sarà il prossimo sviluppo.';
+
+function setModelStatus(text) {
+  modelStatus.textContent = text;
 }
-document.querySelector('#chatForm').addEventListener('submit',e=>{
-  e.preventDefault(); const text=promptInput.value.trim(); if(!text)return;
-  addMessage(text,'user'); promptInput.value='';
-  setTimeout(()=>addMessage(replyTo(text),'bot'),250);
-});
-document.querySelector('#clearBtn').addEventListener('click',()=>{
-  messages.replaceChildren(); addMessage('Chat svuotata. Cosa vuoi fare adesso?','bot');
-});
-document.querySelector('#readBtn').addEventListener('click',()=>{
-  if(!('speechSynthesis' in window)){alert('La lettura vocale non è disponibile in questo browser.');return;}
-  speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(lastReply); u.lang='it-IT'; speechSynthesis.speak(u);
-});
-document.querySelector('#speakBtn').addEventListener('click',()=>{
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){alert('Il riconoscimento vocale non è supportato in questa versione del browser. Puoi comunque scrivere il messaggio.');return;}
-  const r=new SR(); r.lang='it-IT'; r.interimResults=false;
-  r.onresult=e=>{promptInput.value=e.results[0][0].transcript;};
-  r.onerror=()=>alert('Non è stato possibile usare il microfono. Controlla i permessi del browser.');
-  r.start();
-});
-document.querySelector('#searchBtn').addEventListener('click',()=>{
-  const q=promptInput.value.trim();
-  if(!q){alert('Scrivi prima cosa vuoi cercare nella casella della chat.');return;}
-  window.open('https://www.google.com/search?q='+encodeURIComponent(q),'_blank','noopener');
-});
-const memoryInput=document.querySelector('#memoryInput'), saved=document.querySelector('#savedNote');
-function showMemory(){const v=localStorage.getItem('aurix-note');saved.textContent=v?'Nota salvata: '+v:'Nessuna nota salvata.';}
-document.querySelector('#memoryForm').addEventListener('submit',e=>{
-  e.preventDefault();const v=memoryInput.value.trim();if(!v)return;
-  localStorage.setItem('aurix-note',v);memoryInput.value='';showMemory();
-});
+
+async function loadModel() {
+
+  if (generator || loadingModel) {
+    return;
+  }
+
+  if (!navigator.onLine) {
+    setModelStatus(
+      "Serve internet per scaricare il modello AI."
+    );
+    return;
+  }
+
+  loadingModel = true;
+
+  loadModelBtn.disabled = true;
+  loadModelBtn.textContent = "Caricamento...";
+
+  statusBadge.textContent = "CARICAMENTO";
+
+  setModelStatus(
+    "Download e preparazione del modello AI. Attendi..."
+  );
+
+  try {
+
+    generator = await pipeline(
+      "text-generation",
+      MODEL_ID,
+      {
+        device: "wasm",
+        dtype: "q4",
+
+        progress_callback: (progress) => {
+
+          if (
+            progress &&
+            progress.status === "progress" &&
+            Number.isFinite(progress.progress)
+          ) {
+
+            setModelStatus(
+              "Download del modello: " +
+              Math.round(progress.progress) +
+              "%"
+            );
+
+          }
+
+        }
+      }
+    );
+
+    statusBadge.textContent = "AI PRONTA";
+    statusBadge.classList.add("ready");
+
+    loadModelBtn.textContent = "✓ AI caricata";
+
+    setModelStatus(
+      "Modello caricato. Puoi iniziare a conversare."
+    );
+
+    addMessage(
+      "Sono pronta! Il mio modello AI è caricato.",
+      "bot"
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+    generator = null;
+
+    statusBadge.textContent = "ERRORE";
+
+    loadModelBtn.disabled = false;
+    loadModelBtn.textContent =
+      "Riprova a caricare l'AI";
+
+    setModelStatus(
+      "Caricamento non riuscito. Controlla la connessione, " +
+      "lo spazio disponibile e riprova."
+    );
+
+  } finally {
+
+    loadingModel = false;
+
+  }
+
+}
+
+loadModelBtn.addEventListener(
+  "click",
+  loadModel
+);
+
+function extractAnswer(result) {
+
+  const generated =
+    result?.[0]?.generated_text;
+
+  if (Array.isArray(generated)) {
+
+    const last =
+      generated[generated.length - 1];
+
+    return typeof last?.content === "string"
+      ? last.content.trim()
+      : "";
+
+  }
+
+  if (typeof generated === "string") {
+    return generated.trim();
+  }
+
+  return "";
+
+}
+
+async function sendMessage(text) {
+
+  if (!text || busy) {
+    return;
+  }
+
+  if (!generator) {
+
+    addMessage(
+      "Prima carica il modello AI usando il pulsante qui sopra.",
+      "bot"
+    );
+
+    return;
+  }
+
+  busy = true;
+  sendBtn.disabled = true;
+
+  addMessage(text, "user");
+
+  chatHistory.push({
+    role: "user",
+    content: text
+  });
+
+  setModelStatus("AURIX sta pensando...");
+
+  try {
+
+    const conversation = [
+      SYSTEM_PROMPT,
+      ...chatHistory.slice(-8)
+    ];
+
+    const result = await generator(
+      conversation,
+      {
+        max_new_tokens: 128,
+        do_sample: true,
+        temperature: 0.7,
+        top_p: 0.9,
+        repetition_penalty: 1.08
+      }
+    );
+
+    const answer =
+      extractAnswer(result) ||
+      "Non sono riuscita a formulare una risposta. Riprova.";
+
+    chatHistory.push({
+      role: "assistant",
+      content: answer
+    });
+
+    chatHistory = chatHistory.slice(-8);
+
+    addMessage(answer, "bot");
+
+    setModelStatus("AI locale attiva.");
+
+  } catch (error) {
+
+    console.error(error);
+
+    chatHistory.pop();
+
+    addMessage(
+      "Ho incontrato un problema durante la risposta. Riprova.",
+      "bot"
+    );
+
+    setModelStatus(
+      "Errore durante la generazione."
+    );
+
+  } finally {
+
+    busy = false;
+    sendBtn.disabled = false;
+    promptInput.focus();
+
+  }
+
+}
+
+document.querySelector("#chatForm").addEventListener(
+  "submit",
+  async (event) => {
+
+    event.preventDefault();
+
+    const text = promptInput.value.trim();
+
+    if (!text) {
+      return;
+    }
+
+    promptInput.value = "";
+
+    await sendMessage(text);
+
+  }
+);
+
+document.querySelector("#clearBtn").addEventListener(
+  "click",
+  () => {
+
+    messages.replaceChildren();
+
+    chatHistory = [];
+
+    addMessage(
+      "Chat svuotata. Cosa vuoi fare adesso?",
+      "bot"
+    );
+
+  }
+);
+
+document.querySelector("#readBtn").addEventListener(
+  "click",
+  () => {
+
+    if (!("speechSynthesis" in window)) {
+
+      alert(
+        "La lettura vocale non è disponibile."
+      );
+
+      return;
+    }
+
+    speechSynthesis.cancel();
+
+    const utterance =
+      new SpeechSynthesisUtterance(lastReply);
+
+    utterance.lang = "it-IT";
+
+    speechSynthesis.speak(utterance);
+
+  }
+);
+
+document.querySelector("#speakBtn").addEventListener(
+  "click",
+  () => {
+
+    const Recognition =
+      window.SpeechRecognition ||
+      window.webkitSpeechRecognition;
+
+    if (!Recognition) {
+
+      alert(
+        "Il riconoscimento vocale non è supportato. Puoi scrivere."
+      );
+
+      return;
+    }
+
+    const recognition = new Recognition();
+
+    recognition.lang = "it-IT";
+    recognition.interimResults = false;
+
+    recognition.onresult = (event) => {
+
+      promptInput.value =
+        event.results[0][0].transcript;
+
+      promptInput.focus();
+
+    };
+
+    recognition.onerror = () => {
+
+      alert(
+        "Microfono non disponibile. Controlla i permessi di Safari."
+      );
+
+    };
+
+    recognition.start();
+
+  }
+);
+
+document.querySelector("#searchBtn").addEventListener(
+  "click",
+  () => {
+
+    const query = promptInput.value.trim();
+
+    if (!query) {
+
+      alert(
+        "Scrivi prima cosa vuoi cercare."
+      );
+
+      return;
+    }
+
+    window.open(
+      "https://www.google.com/search?q=" +
+      encodeURIComponent(query),
+      "_blank",
+      "noopener"
+    );
+
+  }
+);
+
+const memoryInput =
+  document.querySelector("#memoryInput");
+
+const saved =
+  document.querySelector("#savedNote");
+
+function showMemory() {
+
+  const value =
+    localStorage.getItem("aurix-note");
+
+  saved.textContent = value
+    ? "Nota salvata: " + value
+    : "Nessuna nota salvata.";
+
+}
+
+document.querySelector("#memoryForm").addEventListener(
+  "submit",
+  (event) => {
+
+    event.preventDefault();
+
+    const value = memoryInput.value.trim();
+
+    if (!value) {
+      return;
+    }
+
+    localStorage.setItem(
+      "aurix-note",
+      value
+    );
+
+    memoryInput.value = "";
+
+    showMemory();
+
+  }
+);
+
 showMemory();
-if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+
+if (
+  "serviceWorker" in navigator &&
+  location.protocol.startsWith("http")
+) {
+
+  navigator.serviceWorker
+    .register("./sw.js")
+    .catch((error) => {
+      console.log(error);
+    });
+
+}
+
 </script>
 </body>
 </html>
